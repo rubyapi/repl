@@ -42,14 +42,8 @@ class CodeExecutor
   end
 
   def ruby_args
-    return "" if disable_args?
+    return engine_args if engine_args?
 
-    args = ["--disable-did_you_mean"]
-
-    unless rubygems_required?
-      args << "--disable-gems"
-    end
-
-    args.join(" ")
+    "--disable-did_you_mean --disable-gems"
   end
 end

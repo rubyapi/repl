@@ -3,15 +3,15 @@ module Helper
     ENV["RUBY_BIN"] || `which ruby`.strip
   end
   
-  def rubygems_required?
-    ENV["RUBYGEMS_REQUIRED"] && !ENV["RUBYGEMS_REQUIRED"].empty? 
+  def engine_args?
+    !engine_args.nil?
   end
-  
-  def disable_args?
-    ENV["DISBALE_RUBY_ARGS"] && !ENV["DISBALE_RUBY_ARGS"].empty?
+
+  def engine_args
+    ENV["ENGINE_ARGS"]
   end
 
   def minimal_execution?
-    ENV["MINIMAL_EXECUTION"] && !ENV["DISBALE_RUBY_ARGS"].empty?
+    ENV["MINIMAL_EXECUTION"] && !ENV["MINIMAL_EXECUTION"].empty?
   end
 end

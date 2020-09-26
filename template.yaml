@@ -145,7 +145,8 @@ Resources:
         - !Ref JRuby
       Environment:
         Variables:
-          RUBYGEMS_REQUIRED: "true"
+          ENGINE_ARGS: "--dev --disable-did_you_mean"
+          MINIMAL_EXECUTION: "true"
       Events:
         HTTP:
           Type: Api
@@ -166,7 +167,7 @@ Resources:
         - !Ref MRuby
       Environment:
         Variables:
-          DISBALE_RUBY_ARGS: "true"
+          ENGINE_ARGS: ""
           MINIMAL_EXECUTION: "true"
       Events:
         HTTP:
@@ -188,7 +189,7 @@ Resources:
         - !Ref MRubyDev
       Environment:
         Variables:
-          DISBALE_RUBY_ARGS: "true"
+          ENGINE_ARGS: ""
           MINIMAL_EXECUTION: "true"
       Events:
         HTTP:
@@ -205,7 +206,7 @@ Resources:
         - !Ref ArtichokeRuby
       Environment:
         Variables:
-          DISBALE_RUBY_ARGS: "true"
+          ENGINE_ARGS: ""
           MINIMAL_EXECUTION: "true"
       Events:
         HTTPDev:
