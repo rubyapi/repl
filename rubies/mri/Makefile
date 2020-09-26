@@ -20,4 +20,8 @@ build-MRIRuby23:
 
 build-MRIRuby30:
 	mkdir -p "$(ARTIFACTS_DIR)/ruby"
+	docker run --rm --user "$(id -u):$(id -g)" --mount type=bind,source="$(PWD)"/scripts,target=/scripts --mount type=bind,source="$(ARTIFACTS_DIR)/ruby",target=/build/ruby lambci/lambda:build-provided /scripts/build-ruby.sh 3.0.0-preview1
+
+build-MRIRubyDev:
+	mkdir -p "$(ARTIFACTS_DIR)/ruby"
 	docker run --rm --user "$(id -u):$(id -g)" --mount type=bind,source="$(PWD)"/scripts,target=/scripts --mount type=bind,source="$(ARTIFACTS_DIR)/ruby",target=/build/ruby lambci/lambda:build-provided /scripts/build-ruby.sh 3.0.0-dev

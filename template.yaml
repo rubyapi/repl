@@ -91,7 +91,7 @@ Resources:
           Properties:
             Path: /exec/mri/23
             Method: post
-
+  
   MRIRuby30Exec:
     Type: AWS::Serverless::Function
     Properties:
@@ -104,6 +104,14 @@ Resources:
           Properties:
             Path: /exec/mri/30
             Method: post
+            
+  MRIRubyDevExec:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: app/
+      Layers:
+        - !Ref MRIRubyDev
+      Events:
         HTTPDev:
           Type: Api
           Properties:
@@ -255,6 +263,14 @@ Resources:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: mri-ruby-30
+      ContentUri: rubies/mri
+    Metadata:
+      BuildMethod: makefile
+
+  MRIRubyDev:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: mri-ruby-dev
       ContentUri: rubies/mri
     Metadata:
       BuildMethod: makefile
