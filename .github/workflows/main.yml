@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Dependencies with Apt Get
         run: |
-          sudo apt update && apt install python3.8 jq -y
+          sudo apt update && sudo apt install python3.8 jq -y
       - name: Configure AWS credentials
         id: creds
         uses: aws-actions/configure-aws-credentials@v1
