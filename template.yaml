@@ -29,11 +29,6 @@ Resources:
       Layers:
         - !Ref MRIRuby27
       Events:
-        HTTPLatest:
-          Type: Api
-          Properties:
-            Path: /exec/mri/latest
-            Method: post
         HTTP:
           Type: Api
           Properties:
@@ -99,6 +94,11 @@ Resources:
       Layers:
         - !Ref MRIRuby30
       Events:
+        HTTPLatest:
+          Type: Api
+          Properties:
+            Path: /exec/mri/latest
+            Method: post
         HTTP:
           Type: Api
           Properties:
