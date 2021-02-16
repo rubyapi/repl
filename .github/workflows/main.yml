@@ -18,10 +18,6 @@ jobs:
       env-name: ${{ steps.env-name.outputs.environment }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: |
-          sudo apt update && sudo apt install python3.8 jq -y
-          gem install bundler --no-doc
       - name: Configure AWS credentials
         id: creds
         uses: aws-actions/configure-aws-credentials@v1
@@ -51,9 +47,19 @@ jobs:
           echo "The repository is $REPOSITORY"
           echo "The environment is $ENVIRONMENT"
           echo "The branch is $BRANCH"
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Install Dependencies
+        run: |
+          sudo apt update && sudo apt install python3.8 jq -y
       - name: SAM Validate
         run: |
           sam validate
+      - name: Run Tests
+        run: |
+          bundle exec rake test
       - name: SAM Build
         run: |
           sam build
