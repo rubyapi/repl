@@ -65,4 +65,4 @@ jobs:
           sam build
       - name: SAM Deploy
         run: |
-          sam deploy --region ${{ secrets.AWS_REGION }} --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --s3-bucket ${{ secrets.AWS_BUCKET_NAME }}
+          sam deploy --region ${{ secrets.AWS_REGION }} --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --s3-bucket ${{ secrets.AWS_BUCKET_NAME }} --role-arn ${{ secrets.DEPLOY_ROLE_ARN }} --no-confirm-changeset --no-fail-on-empty-changeset
