@@ -48,7 +48,7 @@ jobs:
         with:
           name: sam-build
           retention-days: 7
-          path: .aws-sam/
+          path: sam-build.tar
     
   deployStaging:
     name: Deploy to Staging
