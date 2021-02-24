@@ -11,6 +11,9 @@ on:
     paths-ignore:
       - '**.md'
 
+env:
+  SAM_CLI_TELEMETRY: 0
+
 jobs:
   build:
     name: Build
@@ -39,9 +42,7 @@ jobs:
           sam build
       - name: Package SAM Build
         run: |
-          echo "Current DIR: $(PWD)"
-          echo "Current Fils: \n$(ls -a)"
-          tar -cvf sam-build.tar .sam-build
+          tar -cvf sam-build.tar .aws-sam
       - name: Upload SAM Build
         uses: actions/upload-artifact@v2
         with:
