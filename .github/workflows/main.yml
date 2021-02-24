@@ -64,7 +64,10 @@ jobs:
       - name: SAM Build
         run: |
           sam build
-      - uses: actions/upload-artifact@v2
+      - name: Package SAM Build
+        run: tar -cvf sam-build.tar .sam-build
+      - name: Upload SAM Build
+        uses: actions/upload-artifact@v2
         with:
           name: sam-build
           retention-days: 1
@@ -88,6 +91,8 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: sam-build
+      - name: Unpack SAM Build
+        run: tar -xvf sam-build.tar
       - name: SAM Deploy
         run: |
           sam deploy --region ${{ secrets.AWS_REGION }} --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --s3-bucket ${{ secrets.AWS_S3_BUCKET }} --role-arn ${{ secrets.AWS_ROLE_ARN }} --s3-prefix ${{ secrets.AWS_S3_PREFIX }} --no-confirm-changeset --tags "environment=staging"
@@ -95,7 +100,7 @@ jobs:
   deployProduction:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: build
+    needs: deployStaging
     environment:
       name: Production
     steps:
@@ -110,6 +115,8 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: sam-build
+      - name: Unpack SAM Build
+        run: tar -xvf sam-build.tar
       - name: SAM Deploy
         run: |
           sam deploy --region ${{ secrets.AWS_REGION }} --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --s3-bucket ${{ secrets.AWS_S3_BUCKET }} --role-arn ${{ secrets.AWS_ROLE_ARN }} --s3-prefix ${{ secrets.AWS_S3_PREFIX }} --no-confirm-changeset --tags "environment=production"
