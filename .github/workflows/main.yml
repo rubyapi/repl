@@ -1,0 +1,99 @@
+name: AWS SAM
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    paths-ignore:
+      - '**.md'
+
+env:
+  SAM_CLI_TELEMETRY: 0
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: SAM Validate
+        run: |
+          sam validate
+      - name: Run Tests
+        run: |
+          bundle exec rake test
+      - name: SAM Build
+        run: |
+          sam build
+      - name: Package SAM Build
+        run: |
+          tar -cvf sam-build.tar .aws-sam
+      - name: Upload SAM Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: sam-build
+          retention-days: 7
+          path: sam-build.tar
+    
+  deployStaging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: Staging
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: sam-build
+      - name: Unpack SAM Build
+        run: tar -xvf sam-build.tar
+      - name: SAM Deploy
+        run: |
+          sam deploy --region ${{ secrets.AWS_REGION }} --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --s3-bucket ${{ secrets.AWS_S3_BUCKET }} --role-arn ${{ secrets.AWS_ROLE_ARN }} --s3-prefix ${{ secrets.AWS_S3_PREFIX }} --no-confirm-changeset --tags "environment=staging"
+
+  deployProduction:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: deployStaging
+    environment:
+      name: Production
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: sam-build
+      - name: Unpack SAM Build
+        run: tar -xvf sam-build.tar
+      - name: SAM Deploy
+        run: |
+          sam deploy --region ${{ secrets.AWS_REGION }} --stack-name ${{ secrets.AWS_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --s3-bucket ${{ secrets.AWS_S3_BUCKET }} --role-arn ${{ secrets.AWS_ROLE_ARN }} --s3-prefix ${{ secrets.AWS_S3_PREFIX }} --no-confirm-changeset --tags "environment=production"

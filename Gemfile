@@ -1,3 +1,7 @@
 source "https://rubygems.org"
 
-gem "test-unit", group: :test
+gem "rake"
+
+group :test do
+  gem "test-unit"
+end
