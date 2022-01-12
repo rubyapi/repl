@@ -1,12 +1,14 @@
-require_relative './helper'
-require_relative './response'
 require_relative './payload'
 
 require 'open3'
 
-class CodeExecutor
-  include Helper
+Response = Struct.new(:output, :errors, :status, keyword_init: true) do
+  def status
+    self[:status] || 0
+  end
+end
 
+class CodeExecutor
   attr_accessor :payload
 
   def self.run(body)
@@ -29,21 +31,18 @@ class CodeExecutor
   end
 
   def ruby_cmd
-    [ruby_env, ruby_bin_path, ruby_args].join(" ")
-  end
-
-  # Workaround for SAM overwriting the PATH env
-  def ruby_env
-    "PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/opt/bin:/opt/java/bin\""
+    [ruby_bin_path, ruby_args].join(" ")
   end
 
   def ruby_bin_path
-    ENV["RUBY_BIN"] || `which ruby`.strip
+    if ENV["RUBY_BIN_PATH"] && !ENV["RUBY_BIN_PATH"].empty?
+      ENV["RUBY_BIN_PATH"]
+    else
+      "/opt/ruby/bin/ruby"
+    end
   end
 
   def ruby_args
-    return engine_args if engine_args?
-
-    "--disable-did_you_mean --disable-gems"
+    ENV["ENGINE_ARGS"]
   end
 end

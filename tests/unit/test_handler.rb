@@ -1,7 +1,10 @@
 require 'json'
 require 'test/unit'
+require 'pathname'
 
-require_relative '../app/run'
+require_relative '../../app/app'
+
+ENV['RUBY_BIN_PATH'] = Pathname.new(RbConfig::CONFIG['bindir']).join("ruby").to_s
 
 class ReplTest < Test::Unit::TestCase
   def test_normal_execution
@@ -32,7 +35,7 @@ class ReplTest < Test::Unit::TestCase
       statusCode: 200,
       body: {
         output: "",
-        error: "-:17:in `<main>': test (RuntimeError)\n",
+        error: "-:2:in `<main>': test (RuntimeError)\n",
         status: 1
       }.to_json
     })

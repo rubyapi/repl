@@ -1,18 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Ruby API Repl service
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 10
     MemorySize: 512
-    Handler: run.lambda_handler
-    Runtime: ruby2.7
-    Environment:
-      Variables:
-        LD_LIBRARY_PATH: /lib64:/usr/lib64:/var/runtime:/var/runtime/lib:/var/task:/var/task/lib:/opt/lib:/opt/ruby/lib:/opt/ruby/lib/cext:/opt/ruby/lib/mri:/opt/ruby/lib/sulong/native/lib:/opt/ruby/lib/llvm-toolchain/lib
-        RUBY_BIN: /opt/ruby/bin/ruby
+    Architectures:
+      - arm64
   Api:
     EndpointConfiguration: REGIONAL
     Auth:
@@ -20,314 +15,132 @@ Globals:
       UsagePlan:
         CreateUsagePlan: SHARED
 
-# More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
 Resources:
-  MRIRuby27Exec:
-    Type: AWS::Serverless::Function
+  MRIRuby:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRIRuby27
+      PackageType: Image
       Events:
-        HTTP:
-          Type: Api
+        Exec:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /exec/mri/27
+            Path: /exec/mri
             Method: post
+    Environment:
+      Variables:
+        ENGINE_ARGS: "--disable-did_you_mean --disable-gems"
+    Metadata:
+      DockerTag: mriruby27
+      DockerContext: ./app
+      Dockerfile: Dockerfile
+      DockerBuildArgs:
+        RUBY_VERSION: 3.1.0
 
-  MRIRuby26Exec:
-    Type: AWS::Serverless::Function
+  MRIRubyDev:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRIRuby26
+      PackageType: Image
       Events:
-        HTTP:
-          Type: Api
-          Properties:
-            Path: /exec/mri/26
-            Method: post
-
-  MRIRuby25Exec:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRIRuby25
-      Events:
-        HTTP:
-          Type: Api
-          Properties:
-            Path: /exec/mri/25
-            Method: post
-
-  MRIRuby24Exec:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRIRuby24
-      Events:
-        HTTP:
-          Type: Api
-          Properties:
-            Path: /exec/mri/24
-            Method: post
-
-  MRIRuby23Exec:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRIRuby23
-      Events:
-        HTTP:
-          Type: Api
-          Properties:
-            Path: /exec/mri/23
-            Method: post
-  
-  MRIRuby30Exec:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRIRuby30
-      Events:
-        HTTPLatest:
-          Type: Api
-          Properties:
-            Path: /exec/mri/latest
-            Method: post
-        HTTP:
-          Type: Api
-          Properties:
-            Path: /exec/mri/30
-            Method: post
-            
-  MRIRubyDevExec:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRIRubyDev
-      Events:
-        HTTPDev:
-          Type: Api
+        Exec:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /exec/mri/dev
             Method: post
-
-  # TruffleRubyExec:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: app/
-  #     Layers:
-  #       - !Ref TruffleRuby
-  #     Events:
-  #       HTTP:
-  #         Type: Api
-  #         Properties:
-  #           Path: /exec/truffleruby/202
-  #           Method: post
-  #       HTTPLatest:
-  #         Type: Api
-  #         Properties:
-  #           Path: /exec/truffleruby/latest
-  #           Method: post
-
-  JRubyExec:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref Java
-        - !Ref JRuby
       Environment:
         Variables:
-          ENGINE_ARGS: "--dev --disable-did_you_mean"
-          MINIMAL_EXECUTION: "true"
-      Events:
-        HTTP:
-          Type: Api
-          Properties:
-            Path: /exec/jruby/92
-            Method: post
-        HTTPLatest:
-          Type: Api
-          Properties:
-            Path: /exec/jruby/latest
-            Method: post
+          ENGINE_ARGS: "--disable-did_you_mean --disable-gems"
+    Metadata:
+      DockerTag: mrirubydev
+      DockerContext: ./app
+      Dockerfile: Dockerfile
+      DockerBuildArgs:
+        RUBY_VERSION: 3.2.0-dev
 
-  MRubyExec:
-    Type: AWS::Serverless::Function
+  TruffleRuby:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRuby
+      PackageType: Image
+      Events:
+        Exec:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /exec/truffleruby
+            Method: post
       Environment:
         Variables:
-          ENGINE_ARGS: ""
-          MINIMAL_EXECUTION: "true"
-      Events:
-        HTTP:
-          Type: Api
-          Properties:
-            Path: /exec/mruby/21
-            Method: post
-        HTTPLatest:
-          Type: Api
-          Properties:
-            Path: /exec/mruby/latest
-            Method: post
-
-  MRubyDevExec:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref MRubyDev
-      Environment:
-        Variables:
-          ENGINE_ARGS: ""
-          MINIMAL_EXECUTION: "true"
-      Events:
-        HTTP:
-          Type: Api
-          Properties:
-            Path: /exec/mruby/dev
-            Method: post 
-
-  ArtichokeRubyExec:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: app/
-      Layers:
-        - !Ref ArtichokeRuby
-      Environment:
-        Variables:
-          ENGINE_ARGS: ""
-          MINIMAL_EXECUTION: "true"
-      Events:
-        HTTPDev:
-          Type: Api
-          Properties:
-            Path: /exec/artichokeruby/dev
-            Method: post
-        HTTPLatest:
-          Type: Api
-          Properties:
-            Path: /exec/artichokeruby/latest
-            Method: post
-
-  MRIRuby27:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: mri-ruby-27
-      ContentUri: rubies/mri
+          ENGINE_ARGS: "--native"
     Metadata:
-      BuildMethod: makefile
-
-  MRIRuby26:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: mri-ruby-26
-      ContentUri: rubies/mri
-    Metadata:
-      BuildMethod: makefile
-
-  MRIRuby25:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: mri-ruby-25
-      ContentUri: rubies/mri
-    Metadata:
-      BuildMethod: makefile
-    
-  MRIRuby24:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: mri-ruby-24
-      ContentUri: rubies/mri
-    Metadata:
-      BuildMethod: makefile
-
-  MRIRuby23:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: mri-ruby-23
-      ContentUri: rubies/mri
-    Metadata:
-      BuildMethod: makefile
-
-  MRIRuby30:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: mri-ruby-30
-      ContentUri: rubies/mri
-    Metadata:
-      BuildMethod: makefile
-
-  MRIRubyDev:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: mri-ruby-dev
-      ContentUri: rubies/mri
-    Metadata:
-      BuildMethod: makefile
-
-  Java:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: java
-      ContentUri: rubies/support/java
-    Metadata:
-      BuildMethod: makefile
+      DockerTag: truffleruby
+      DockerContext: ./app
+      Dockerfile: Dockerfile
+      DockerBuildArgs:
+        RUBY_VERSION: truffleruby-21.3.0
 
   JRuby:
-    Type: AWS::Serverless::LayerVersion
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      LayerName: jruby
-      ContentUri: rubies/jruby
+      PackageType: Image
+      Events:
+        Exec:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /exec/jruby
+            Method: post
+      Environment:
+        Variables:
+          ENGINE_ARGS: "--dev"
     Metadata:
-      BuildMethod: makefile
+      DockerTag: jruby
+      DockerContext: ./app
+      Dockerfile: Dockerfile
+      DockerBuildArgs:
+        RUBY_VERSION: jruby-9.3.2.0
 
   MRuby:
-    Type: AWS::Serverless::LayerVersion
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      LayerName: mruby
-      ContentUri: rubies/mruby
+      PackageType: Image
+      Environment:
+        Variables:
+          ENGINE_ARGS: ""
+      Events:
+        Exec:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /exec/mruby/27
+            Method: post
     Metadata:
-      BuildMethod: makefile
-
-  MRubyDev:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: mruby
-      ContentUri: rubies/mruby
-    Metadata:
-      BuildMethod: makefile
+      DockerTag: mruby
+      DockerContext: ./app
+      Dockerfile: Dockerfile
+      DockerBuildArgs:
+        RUBY_VERSION: mruby-3.0.0
 
   ArtichokeRuby:
-    Type: AWS::Serverless::LayerVersion
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      LayerName: artichoke-ruby
-      ContentUri: rubies/artichoke-ruby
+      PackageType: Image
+      Environment:
+        Variables:
+          ENGINE_ARGS: ""
+          RUBY_BIN_PATH: "/opt/ruby/bin/artichoke"
+      Events:
+        Exec:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /exec/artichokeruby
+            Method: post
     Metadata:
-      BuildMethod: makefile
-    
-  # TruffleRuby:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: truffleruby
-  #     ContentUri: rubies/truffleruby
-  #   Metadata:
-  #     BuildMethod: makefile
-  
+      DockerTag: artichokeruby
+      DockerContext: ./app
+      Dockerfile: Dockerfile.artichoke
+      DockerBuildArgs:
+        RUBY_VERSION: artichoke-dev
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  Endpoint:
-    Description: "API Gateway endpoint"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"

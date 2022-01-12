@@ -1,0 +1,20 @@
+# syntax=docker/dockerfile:1
+FROM rust as builder
+
+WORKDIR /opt
+
+RUN apt update -qq && apt install -y -qq ruby clang && \
+  cargo install --git https://github.com/artichoke/artichoke \
+  --branch trunk --locked artichoke --root /opt/artichoke
+
+FROM public.ecr.aws/lambda/ruby:2.7 as app
+
+ENV GEM_HOME=${LAMBDA_TASK_ROOT}
+
+COPY --from=builder /opt/artichoke/ /opt/ruby/
+COPY . ./
+
+RUN bundle install
+
+# Command can be overwritten by providing a different command in the template directly.
+CMD ["app.lambda_handler"]

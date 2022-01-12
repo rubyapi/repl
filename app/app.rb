@@ -1,9 +1,6 @@
-# frozen_string_literal: true
-
 require 'json'
 require 'open3'
 
-require_relative './helper'
 require_relative './code_executor'
 
 def lambda_handler(event:, context:)
@@ -11,7 +8,7 @@ def lambda_handler(event:, context:)
 
   body = event.fetch(:body)
 
-  return { statusCode: 400, body: {}.to_json } if body.empty?
+  return empty_response if body.empty?
 
   response = CodeExecutor.run(body)
 
@@ -21,3 +18,6 @@ def lambda_handler(event:, context:)
   }
 end
 
+def empty_response
+  { statusCode: 200, body: {} }
+end

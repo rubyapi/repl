@@ -25,9 +25,9 @@ $ sam local start-api
 **Note** The local dev server does not automatically build the Ruby Engine layer that each function depends on. You will need to build the layer beforehand for the engine/version being invoked ie:
 
 ```
-$ sam build MRIRuby27
+$ sam build MRIRuby
 $ sam local start-api
-$ curl http://localhost:3000/exec/mri/27
+$ curl http://localhost:3000/exec/mri
 ```
 
 ## Testing repl function
@@ -35,26 +35,7 @@ $ curl http://localhost:3000/exec/mri/27
 The test suit is located in `tests` and can be executed with:
 
 ```bash
-$ rake test
-```
-
-## Architecture
-
-Each Ruby engine & version is a single lambda function that contains a small ruby application & a [Lambda layer](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) that contains the given Ruby engine version's program/binary.
-
-The diagram represents the application flow:
-
-```
-+-----------------+               +-----------------+        Execute Ruby
-|                 |               |                 |            Binary
-|                 |    Execute    |                 +---------+
-|                 |  Lambda func  |                 |         |
-|  HTTP Endpoint  +---------------> Lambda Function |         |
-|                 |               |                 +---------v---------+
-|                 |               |                 |                   |
-|                 |               |                 | Ruby Engine Layer |
-|                 |               |                 |                   |
-+-----------------+               +-----------------+-------------------+
+$ ruby tests/unit/*
 ```
 
 ## Deploy to AWS
