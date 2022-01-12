@@ -7,7 +7,7 @@ Globals:
     Timeout: 10
     MemorySize: 512
     Architectures:
-      - arm64
+      - amd64
   Api:
     EndpointConfiguration: REGIONAL
     Auth:
