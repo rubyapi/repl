@@ -14,16 +14,16 @@ env:
   PIPELINE_USER_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   SAM_TEMPLATE: template.yaml
   TESTING_STACK_NAME: rubyapi-repl
-  TESTING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}}:role/aws-sam-cli-managed-producti-PipelineExecutionRole-19EJVKIEN2Z43
-  TESTING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}}:role/aws-sam-cli-managed-produ-CloudFormationExecutionR-H2PJX1UFBDQM
+  TESTING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-sam-cli-managed-producti-PipelineExecutionRole-19EJVKIEN2Z43
+  TESTING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-sam-cli-managed-produ-CloudFormationExecutionR-H2PJX1UFBDQM
   TESTING_ARTIFACTS_BUCKET: aws-sam-cli-managed-production-pi-artifactsbucket-1l0386xhkl01
-  TESTING_IMAGE_REPOSITORY: ${{ secrets.AWS_ACCOUNT_ID }}}.dkr.ecr.us-east-1.amazonaws.com/aws-sam-cli-managed-production-pipeline-resources-imagerepository-s94pcktcq5pm
+  TESTING_IMAGE_REPOSITORY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/aws-sam-cli-managed-production-pipeline-resources-imagerepository-s94pcktcq5pm
   TESTING_REGION: us-east-1
   PROD_STACK_NAME: rubyapi-repl
-  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}}:role/aws-sam-cli-managed-testing-PipelineExecutionRole-1WOSCFHR2FWS0
-  PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}}:role/aws-sam-cli-managed-testi-CloudFormationExecutionR-11JVO15KUR9H2
+  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-sam-cli-managed-testing-PipelineExecutionRole-1WOSCFHR2FWS0
+  PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-sam-cli-managed-testi-CloudFormationExecutionR-11JVO15KUR9H2
   PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-testing-pipel-artifactsbucket-dlg2plvboj3d
-  PROD_IMAGE_REPOSITORY: ${{ secrets.AWS_ACCOUNT_ID }}}.dkr.ecr.us-east-1.amazonaws.com/aws-sam-cli-managed-testing-pipeline-resources-imagerepository-0wc1uydygpow
+  PROD_IMAGE_REPOSITORY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/aws-sam-cli-managed-testing-pipeline-resources-imagerepository-0wc1uydygpow
   PROD_REGION: us-east-1
 
 jobs:
