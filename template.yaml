@@ -133,7 +133,7 @@ Resources:
     Metadata:
       DockerTag: artichokeruby
       DockerContext: ./app
-      Dockerfile: Dockerfile.artichoke
+      Dockerfile: Dockerfile
       DockerBuildArgs:
         RUBY_VERSION: artichoke-dev
 
