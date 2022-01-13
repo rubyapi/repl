@@ -44,7 +44,7 @@ Resources:
         Exec:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /exec/mri/dev
+            Path: /exec/dev
             Method: post
       Environment:
         Variables:
@@ -107,7 +107,7 @@ Resources:
         Exec:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /exec/mruby/27
+            Path: /exec/mruby
             Method: post
     Metadata:
       DockerTag: mruby
