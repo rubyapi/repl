@@ -8,7 +8,7 @@ ENV RUBY_CFLAGS="-Os"
 ENV RUBY_CONFIGURE_OPTS="--disable-install-doc"
 
 RUN yum groupinstall -y 'Development Tools' && \
-  yum install -y openssl-devel java-1.8.0-openjdk
+  yum install -y openssl-devel java-1.8.0-openjdk libc6
 
 RUN git clone https://github.com/rbenv/ruby-build /opt/ruby-build --depth 1 && \
   /opt/ruby-build/bin/ruby-build ${RUBY_VERSION} /opt/ruby
