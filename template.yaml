@@ -28,7 +28,7 @@ Resources:
             Method: post
     Environment:
       Variables:
-        ENGINE_ARGS: "--disable-did_you_mean --disable-gems"
+        ENGINE_ARGS: --disable-did_you_mean --disable-gems
     Metadata:
       DockerTag: mriruby27
       DockerContext: ./app
@@ -48,7 +48,7 @@ Resources:
             Method: post
       Environment:
         Variables:
-          ENGINE_ARGS: "--disable-did_you_mean --disable-gems"
+          ENGINE_ARGS: --disable-did_you_mean --disable-gems
     Metadata:
       DockerTag: mrirubydev
       DockerContext: ./app
@@ -68,7 +68,7 @@ Resources:
             Method: post
       Environment:
         Variables:
-          ENGINE_ARGS: "--native"
+          ENGINE_ARGS: --native
     Metadata:
       DockerTag: truffleruby
       DockerContext: ./app
@@ -88,7 +88,7 @@ Resources:
             Method: post
       Environment:
         Variables:
-          ENGINE_ARGS: "--dev"
+          ENGINE_ARGS: --dev
     Metadata:
       DockerTag: jruby
       DockerContext: ./app
@@ -102,7 +102,7 @@ Resources:
       PackageType: Image
       Environment:
         Variables:
-          ENGINE_ARGS: ""
+          ENGINE_ARGS:
       Events:
         Exec:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -122,8 +122,8 @@ Resources:
       PackageType: Image
       Environment:
         Variables:
-          ENGINE_ARGS: ""
-          RUBY_BIN_PATH: "/opt/ruby/bin/artichoke"
+          ENGINE_ARGS:
+          RUBY_BIN_PATH: /opt/ruby/bin/artichoke
       Events:
         Exec:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -142,5 +142,5 @@ Outputs:
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   ApiEndpoint:
-    Description: "API Gateway endpoint URL for Prod stage for function"
+    Description: "API Gateway endpoint URL"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
