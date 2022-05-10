@@ -1,0 +1,10 @@
+{
+  "engines": [
+    { "name": "mri", "version":"3.1.2" },
+    { "name": "dev", "version": "3.2.0-dev" },
+    { "name": "truffleruby", "verson": "truffleruby-21.3.0" },
+    { "name": "jruby", "version": "jruby-9.3.2.0", "java": true },
+    { "name": "mruby", "version": "mruby-3.0.0" },
+    { "name": "artichoke", "version": "artichoke-dev" }
+  ]
+}
