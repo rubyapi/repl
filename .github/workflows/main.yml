@@ -2,10 +2,10 @@ name: Docker
 
 on:
   push:
-    # branches:
-    #   - main
-    # paths-ignore:
-    #   - '**.md'
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
   pull_request:
     types:
       - opened
