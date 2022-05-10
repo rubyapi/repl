@@ -48,5 +48,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: rubyapi/repl:${{matrix.engines.name}}
+          tags: ghcr.io/rubyapi/repl:${{matrix.engines.name}}
           build-args: JAVA_REQUIRED=${{matrix.engines.version}},JAVA_REQUIRED=${{matrix.engines.java}}
