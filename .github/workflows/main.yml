@@ -37,16 +37,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Login to Github Packages
-        uses: docker/login-action@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ghcr.io/rubyapi/repl:${{matrix.engines.name}}
-          build-args: JAVA_REQUIRED=${{matrix.engines.version}},JAVA_REQUIRED=${{matrix.engines.java}}
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.aws-region-1.amazonaws.com:${{ matrix.engines.name }}
+          build-args: JAVA_REQUIRED=${{ matrix.engines.version }},JAVA_REQUIRED=${{ matrix.engines.java }}
