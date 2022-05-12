@@ -12,6 +12,9 @@ def lambda_handler(event:, context:)
 
   response = CodeExecutor.run(body)
 
+  puts("Finished REPL request: length=#{response.output.length} " \
+    "error-length=#{response.errors.length} status=#{response.status}")
+
   {
     statusCode: 200,
     body: { output: response.output, error: response.errors, status: response.status }.to_json
