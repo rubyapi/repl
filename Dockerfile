@@ -28,7 +28,7 @@ ENV LD_LIBRARY_PATH=${RUBY_INSTALL_PATH}/lib
 RUN if [[ "$JAVA_REQUIRED" == "true" ]]; then yum install -y java-1.8.0-openjdk; fi
 
 COPY --from=builder ${RUBY_INSTALL_PATH} ${RUBY_INSTALL_PATH}
-COPY app ${LAMBDA_TASK_ROOT}/
+COPY app/ ${LAMBDA_TASK_ROOT}
 
 RUN bundle install
 
